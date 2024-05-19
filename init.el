@@ -1,3 +1,9 @@
+;;; init.el --- emacs config
+
+;;; Commentary:
+
+;;; Code:
+
 ;; ui
 (setq inhibit-startup-message t)
 
@@ -7,7 +13,6 @@
 (menu-bar-mode -1)
 (set-fringe-mode 10)
 (fido-vertical-mode)
-(load-theme 'wombat)
 (column-number-mode)
 (global-display-line-numbers-mode)
 
@@ -19,15 +24,22 @@
 
 ;; package
 (require 'package)
-
 (package-initialize)
-
 (unless package-archive-contents
-  (package-refresh-contnts))
+  (package-refresh-contents))
 
 ;; use-package
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;; modus-themes
+(use-package modus-themes
+  :init
+  (setq modus-themes-italic-constructs t
+	modus-themes-bold-constructs t)
+  (load-theme 'modus-vivendi-tinted t)
+  :config
+  (enable-theme 'modus-vivendi-tinted))
 
 ;; whitespace
 (use-package whitespace
@@ -50,3 +62,20 @@
 
 ;; magit
 (use-package magit)
+
+;; flycheck
+(use-package flycheck
+  :init (global-flycheck-mode))
+
+(flycheck-define-checker fasm
+  "fasm syntax checker"
+  :command ("fasm-check" source-inplace)
+  :error-patterns
+  ;((error line-start (file-name) ":" line ": error: " (message) line-end))
+  ((error bol (file-name) " [" line "]: error: " (message) eol))
+  :modes asm-mode)
+
+(add-to-list 'flycheck-checkers 'fasm)
+
+(provide 'init)
+;;; init.el ends here
