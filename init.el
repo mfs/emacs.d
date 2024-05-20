@@ -65,17 +65,15 @@
 
 ;; flycheck
 (use-package flycheck
-  :init (global-flycheck-mode))
-
-(flycheck-define-checker fasm
-  "fasm syntax checker"
-  :command ("fasm-check" source-inplace)
-  :error-patterns
-  ;((error line-start (file-name) ":" line ": error: " (message) line-end))
-  ((error bol (file-name) " [" line "]: error: " (message) eol))
-  :modes asm-mode)
-
-(add-to-list 'flycheck-checkers 'fasm)
+  :config
+  (global-flycheck-mode)
+  (flycheck-define-checker fasm
+    "fasm syntax checker"
+    :command ("fasm-check" source-inplace)
+    :error-patterns
+    ((error bol (file-name) " [" line "]: error: " (message) eol))
+    :modes asm-mode)
+  (add-to-list 'flycheck-checkers 'fasm))
 
 (provide 'init)
 ;;; init.el ends here
