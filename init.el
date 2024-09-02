@@ -21,6 +21,7 @@
 ;; system
 (setq make-backup-files nil)
 (setq auto-save-default nil)
+(setq-default tab-width 4)
 
 ;; package
 (require 'package)
@@ -55,6 +56,14 @@
   :config
   (add-hook 'rust-mode-hook 'eglot-ensure))
 
+;; go
+(use-package go-mode
+  :config
+  (setq tab-width 4)
+  (setq gofmt-command "goimports")
+  (add-hook 'go-mode-hook 'eglot-ensure)
+  (add-hook 'before-save-hook 'gofmt-before-save))
+
 ;; company
 (use-package company
   :config
@@ -63,17 +72,19 @@
 ;; magit
 (use-package magit)
 
+;;(use-package nasm-mode)
+
 ;; flycheck
 (use-package flycheck
   :config
   (global-flycheck-mode)
-  (flycheck-define-checker fasm
-    "fasm syntax checker"
-    :command ("fasm-check" source-inplace)
+  (flycheck-define-checker nasm
+    "nasm syntax checker"
+    :command ("nasm" "-felf64" "-ilib/" source-inplace)
     :error-patterns
-    ((error bol (file-name) " [" line "]: error: " (message) eol))
+    ((error bol (file-name) ":" line ": error: " (message) eol))
     :modes asm-mode)
-  (add-to-list 'flycheck-checkers 'fasm))
+  (add-to-list 'flycheck-checkers 'nasm))
 
 (provide 'init)
 ;;; init.el ends here
